@@ -186,30 +186,25 @@ def main(args):
         train_loss = train_one_epoch(model, train_samples, optimizer, args.alpha)
         scheduler.step()
 
-        gamma_val = torch.exp(model.log_gamma).item()
-
         if epoch % args.eval_every == 0 or epoch == args.epochs:
-            print(f"\n── Epoch {epoch}/{args.epochs}  lr={lr:.2e}  "
-                  f"loss={train_loss:.4f}  gamma={gamma_val:.4f} ──")
+            print(f"\n── Epoch {epoch}/{args.epochs}  lr={lr:.2e}  loss={train_loss:.4f} ──")
             _, train_hit = evaluate(model, train_samples[:10], args.topk,
                                     alpha=args.alpha, label="train")
             _, test_hit  = evaluate(model, test_samples, args.topk,
                                     alpha=args.alpha, label="test")
 
             log.append({'epoch': epoch, 'train_loss': train_loss,
-                        'train_hit': train_hit, 'test_hit': test_hit,
-                        'gamma': gamma_val})
+                        'train_hit': train_hit, 'test_hit': test_hit})
 
             if test_hit > best_test_hit:
                 best_test_hit = test_hit
                 ckpt = os.path.join(args.outdir, "best_model_v4.pt")
                 torch.save({'epoch': epoch, 'model': model.state_dict(),
-                            'test_hit': test_hit, 'gamma': gamma_val,
-                            'args': vars(args)}, ckpt)
-                print(f"  ✓ Best (hit={test_hit:.3f}, gamma={gamma_val:.4f}) → {ckpt}")
+                            'test_hit': test_hit, 'args': vars(args)}, ckpt)
+                print(f"  ✓ Best (hit={test_hit:.3f}) → {ckpt}")
         else:
             if epoch % 10 == 0:
-                print(f"Epoch {epoch:3d}  loss={train_loss:.4f}  gamma={gamma_val:.4f}")
+                print(f"Epoch {epoch:3d}  loss={train_loss:.4f}")
 
     print(f"\nDone. Best test hit rate: {best_test_hit:.3f}")
     with open(os.path.join(args.outdir, 'train_v4_log.json'), 'w') as f:
