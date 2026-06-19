@@ -1,0 +1,15 @@
+\contentsline {section}{\numberline {1}Problem Statement}{1}{section.1}%
+\contentsline {section}{\numberline {2}Core Hypothesis and Overall Pipeline}{2}{section.2}%
+\contentsline {section}{\numberline {3}GVP-GNN Architecture}{3}{section.3}%
+\contentsline {section}{\numberline {4}CTQW: Continuous-Time Quantum Walk}{3}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Mathematical Formulation}{3}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Loss Function Evolution}{4}{subsection.4.2}%
+\contentsline {section}{\numberline {5}ENAQT: Environment-Assisted Quantum Transport}{4}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Motivation}{4}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}ENAQT Failure Analysis}{5}{subsection.5.2}%
+\contentsline {section}{\numberline {6}Hybrid Model: BCE + CTQW}{5}{section.6}%
+\contentsline {section}{\numberline {7}Results}{6}{section.7}%
+\contentsline {subsection}{\numberline {7.1}Key Findings}{6}{subsection.7.1}%
+\contentsline {section}{\numberline {8}Validation Framework for Undruggable Proteins}{6}{section.8}%
+\contentsline {section}{\numberline {9}Connection to PocketMiner and Proposed Pipeline}{7}{section.9}%
+\contentsline {section}{\numberline {10}Conclusion}{9}{section.10}%

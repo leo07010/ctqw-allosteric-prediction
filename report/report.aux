@@ -1,0 +1,28 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Problem Statement}{1}{section.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2}Core Hypothesis and Overall Pipeline}{2}{section.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Overall prediction pipeline. The GVP-GNN encoder produces both a Hamiltonian $H$ for CTQW and direct classification logits. At inference, the hybrid model combines both signals with a tunable weight $\beta $.}}{2}{figure.caption.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3}GVP-GNN Architecture}{3}{section.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces GVP-GNN encoder. Scalar and vector features are processed jointly. The same encoder is shared between the Hamiltonian head and the classification score head in the Hybrid model.}}{3}{figure.caption.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4}CTQW: Continuous-Time Quantum Walk}{3}{section.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Mathematical Formulation}{3}{subsection.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Loss Function Evolution}{4}{subsection.4.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Evolution of CTQW variants. Each badge shows the average top-5 hit rate. The communicability loss resolved the probability-loss gradient issue; dense $H$ resolved near-degenerate eigenvalues. The Hybrid model combines BCE's dense supervision with CTQW's physical prior.}}{4}{figure.caption.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5}ENAQT: Environment-Assisted Quantum Transport}{4}{section.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Motivation}{4}{subsection.5.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}ENAQT Failure Analysis}{5}{subsection.5.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Root cause of ENAQT failure. The single dephasing rate $\gamma $ cannot simultaneously satisfy the near-pocket (classical) and far-pocket (quantum) regimes. Per-protein $\gamma $ partially addresses this but lacks direct training signal.}}{5}{figure.caption.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6}Hybrid Model: BCE + CTQW}{5}{section.6}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Hybrid model architecture. BCE provides dense per-node gradient (123 ASD proteins, all residues). The CTQW communicability term shapes $H$ to route signal from the active site to allosteric sites. At inference, both signals are combined with a tunable $\beta $.}}{5}{figure.caption.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {7}Results}{6}{section.7}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Top-5 hit rate at 8\,\r {A}. A hit is counted if a predicted residue lies within 8\,\r {A} of any known allosteric residue. Yellow row: best CTQW-integrated result.}}{6}{table.caption.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.1}Key Findings}{6}{subsection.7.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {8}Validation Framework for Undruggable Proteins}{6}{section.8}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Three-layer validation framework for undruggable proteins. A candidate allosteric pocket must pass geometric detectability (Layer 1), show dynamic coupling to the active site (Layer 2), and bear evolutionary signature of functional importance (Layer 3). Cryptic pockets bypass Layer 1 and require MD simulation.}}{7}{figure.caption.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {9}Connection to PocketMiner and Proposed Pipeline}{7}{section.9}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Proposed full pipeline for undruggable target analysis. PocketMiner identifies where a cryptic pocket may form; the CTQW hybrid identifies sites that communicate with the active site; ENM\slash  {}PRS provides dynamical validation. Evolutionary analysis is the final filter before committing to wet-lab experiments.}}{8}{figure.caption.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {10}Conclusion}{9}{section.10}\protected@file@percent }
+\gdef \@abspage@last{9}
