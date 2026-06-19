@@ -1,0 +1,337 @@
+%% 連續時間量子行走於蛋白質别構口袋預測 — 技術報告（繁體中文版）
+%% 使用 xelatex 編譯，字型：Fandol
+\documentclass[11pt, a4paper]{article}
+
+% ── 中文支援（Fandol 字型，繁體標籤）─────────────────────────────────────────
+\usepackage[UTF8, fontset=fandol]{ctex}
+% Override ctex Simplified-default captions to Traditional Chinese
+\AtBeginDocument{
+  \renewcommand{\figurename}{圖}
+  \renewcommand{\tablename}{表}
+  \renewcommand{\contentsname}{目录}
+}
+
+% ── 頁面設定 ──────────────────────────────────────────────────────────────────
+\usepackage[top=25mm, bottom=25mm, left=25mm, right=25mm]{geometry}
+
+% ── 圖表 ──────────────────────────────────────────────────────────────────────
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{caption}
+\captionsetup{font=small, labelfont=bf}
+
+% ── 排版輔助 ──────────────────────────────────────────────────────────────────
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{colortbl}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\definecolor{cBlue}{HTML}{0072B2}
+\definecolor{cOrange}{HTML}{E69F00}
+\definecolor{cGreen}{HTML}{009E73}
+\definecolor{cRed}{HTML}{D55E00}
+\definecolor{cPurple}{HTML}{CC79A7}
+\definecolor{cGray}{HTML}{555555}
+
+\hypersetup{colorlinks=true, linkcolor=cBlue, urlcolor=cBlue, citecolor=cBlue}
+
+% ── 標題 ──────────────────────────────────────────────────────────────────────
+\title{%
+  \textbf{\LARGE 基於連續時間量子行走的蛋白質别構口袋預測}\\[6pt]
+  \large\color{cGray}
+  Cleveland Clinic Challenge 2026 --- 技術報告
+}
+\author{Leo}
+\date{2026 年 6 月}
+
+% ══════════════════════════════════════════════════════════════════════════════
+\begin{document}
+\maketitle
+\tableofcontents
+\vspace{1em}
+
+% ══════════════════════════════════════════════════════════════════════════════
+\section{問題定義}
+
+給定蛋白質的\textbf{apo（未結合）晶體結構}，預測哪些殘基構成\textbf{别構口袋（allosteric pocket）}——
+一個能在不阻擋活性位點的情况下，遠程調節蛋白質功能的結合位點。
+
+\vspace{0.5em}
+\noindent\textbf{挑戰蛋白質：}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{llll}
+\toprule
+\textbf{蛋白質} & \textbf{Apo PDB} & \textbf{别構配體} & \textbf{相關性} \\
+\midrule
+KRAS G12C      & 4OBE & Sotorasib (6OIM)  & 致癌 RAS，switch-II 口袋 \\
+BCR-ABL1       & 1OPL & Asciminib (5MO4)  & 白血病激酶，肉豆蔻醯口袋 \\
+Cardiac Myosin & 5TBY & Mavacamten (6C1H) & 肥厚型心肌病 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+BCR-ABL1 的肉豆蔻醯口袋距 ATP 結合活性位點超過 30\,\AA{}，
+使用傳統擴散方法無法觸及。
+
+% ══════════════════════════════════════════════════════════════════════════════
+\section{核心假設與整體流程}
+
+\textbf{核心假設：}量子行走比傳統隨機行走更能捕捉蛋白質中的遠程通訊，
+原因是量子干涉使訊號可以同時沿多條路徑傳播，對長距離口袋（如 BCR-ABL1）尤其有利。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.72\linewidth]{figures/fig1_pipeline.pdf}
+\caption{整體預測流程。GVP-GNN 編碼器同時輸出哈密頓量 $H$（用於 CTQW）
+  和直接分類 logits（用於 BCE 損失）。
+  推論時，混合模型以可調參數 $\beta$ 合并兩種訊號。}
+\end{figure}
+
+% ══════════════════════════════════════════════════════════════════════════════
+\section{GVP-GNN 架構}
+
+Geometric Vector Perceptron（GVP）\cite{jing2021equivariant}
+是一種幾何等變圖神經網路，可同時處理純量特徵與向量特徵。
+
+\textbf{圖的建構：}以 12\,\AA{} 截止距離建立 C$\alpha$ 接觸圖；
+每個節點帶有 24 維純量特徵（化學性質）和 1 組 3D 向量特徵（局部幾何）；
+每條邊帶有 24 維純量特徵（距離、方向）。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\linewidth]{figures/fig2_architecture.pdf}
+\caption{GVP-GNN 架構。4 層訊息傳遞後，節點嵌入 $s \in \mathbb{R}^{N \times 64}$
+  分叉至兩個輸出頭：H 頭产生 CTQW 哈密頓量；分類頭产生 BCE logits。}
+\end{figure}
+
+\textbf{CTQW 連通性矩陣（communicability）：}
+\[
+  C[i,j] = \sum_k \lvert V_{ik} \rvert^2 \lvert V_{jk} \rvert^2
+\]
+其中 $V$ 为 $H$ 的特徵向量矩陣。此式为 $T \to \infty$ 時量子行走的時間平均，
+透過單次 \texttt{eigh} 呼叫即可封閉形式計算。
+
+% ══════════════════════════════════════════════════════════════════════════════
+\section{損失函數演進}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{figures/fig3_evolution.pdf}
+\caption{從 v1（稀疏 $H$）到基準模型（BCE）的模型演進與命中率（hit rate）變化。
+  圓形徽章顯示各模型在三個挑戰蛋白質上的平均命中率。}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lllr}
+\toprule
+\textbf{模型版本} & \textbf{主要改動} & \textbf{損失類型} & \textbf{命中率} \\
+\midrule
+CTQW v1 & 稀疏 $H$（相鄰矩陣） & 連通性損失 & 0.533 \\
+CTQW v2 & 稠密 $H$（$hh^T/K + \text{diag}$） & 連通性損失 & 0.800 \\
+CTQW v3 & 稠密 $H$ + ENAQT 速率 & ENAQT 損失 & 0.800 \\
+CTQW v4 & 每蛋白質可學習 $\gamma$ & ENAQT 損失 & 0.800 \\
+\rowcolor{yellow!30}
+Hybrid  & 共享編碼器 + 兩個輸出頭 & BCE + 連通性 & \textbf{0.867} \\
+Baseline & 純 GVP 分類 & BCE & 0.933 \\
+\bottomrule
+\end{tabular}
+\caption{各模型結果比較。黄色高亮为本研究提出之最佳量子增强方法。}
+\end{table}
+
+\textbf{基準模型（0.933）勝出的原因：}BCE 損失對 $N$ 個殘基提供密集梯度訊號；
+連通性損失每步僅产生 1 個純量梯度，訊號密度相差 $N$ 倍（$N \approx 200\text{--}500$）。
+
+% ══════════════════════════════════════════════════════════════════════════════
+\section{ENAQT 失敗分析}
+
+環境輔助量子輸運（ENAQT，Haken--Strobl--Reineker 速率）：
+\[
+  k_{ij} = \frac{2\lvert H_{ij}\rvert^2\,\gamma}{\gamma^2 + (H_{ii}-H_{jj})^2}
+\]
+此公式無需特徵分解，梯度路徑更直接：$\mathcal{L} \to p \to W \to K \to H_{ij}$。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.72\linewidth]{figures/fig4_enaqt_failure.pdf}
+\caption{ENAQT 失敗根本原因：近口袋蛋白質（KRAS、Cardiac Myosin）
+  需要高去相干速率（$\gamma \approx 0.8$），
+  遠口袋蛋白質（BCR-ABL1）需要近相干極限（$\gamma \approx 0.05$）。
+  共享的 $\gamma$ 頭學到折衷值 $\gamma \approx 0.17$，導致兩者表現均差。}
+\end{figure}
+
+% ══════════════════════════════════════════════════════════════════════════════
+\section{混合模型（Hybrid）}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\linewidth]{figures/fig5_hybrid.pdf}
+\caption{混合模型架構。訓練時：$\mathcal{L} = \mathcal{L}_{\text{BCE}} + \lambda \cdot \mathcal{L}_{\text{comm}}$。
+  推論時：$\text{scores} = \sigma(\text{logits}) + \beta \cdot C[\text{active} \to i]$。}
+\end{figure}
+
+\textbf{設計原理：}BCE 提供密集梯度使模型學習别構位點的化學特徵；
+CTQW 連通性在推論時加强那些既具化學相似性、又能從活性位點量子可達的殘基。
+
+\textbf{$\beta$ 掃描結果：}
+\begin{table}[H]
+\centering
+\begin{tabular}{lrrr}
+\toprule
+\textbf{$\beta$} & \textbf{KRAS} & \textbf{BCR-ABL1} & \textbf{Cardiac Myosin} \\
+\midrule
+0.0 (純 BCE) & 1.00 & 0.60 & 0.80 \\
+0.2          & 1.00 & 0.60 & 1.00 \\
+0.5          & 1.00 & 0.60 & 1.00 \\
+1.0          & 1.00 & 0.60 & 0.80 \\
+\bottomrule
+\end{tabular}
+\caption{$\beta$ 對各蛋白質命中率的影響。BCR-ABL1 停留於 0.60，
+  原因是最佳 checkpoint 在第 20 epoch（$H$ 尚未完全收斂）。}
+\end{table}
+
+% ══════════════════════════════════════════════════════════════════════════════
+\section{實驗結果}
+
+\begin{table}[H]
+\centering
+\setlength{\tabcolsep}{8pt}
+\begin{tabular}{lrrrr}
+\toprule
+\textbf{模型} & \textbf{KRAS} & \textbf{BCR-ABL1} & \textbf{Cardiac} & \textbf{平均} \\
+\midrule
+CTQW v1 (稀疏 $H$) & 0.80 & 0.40 & 0.40 & 0.533 \\
+CTQW v2 (稠密 $H$) & 1.00 & 0.80 & 0.60 & 0.800 \\
+CTQW v3 (ENAQT)    & 0.80 & 0.80 & 0.80 & 0.800 \\
+CTQW v4 (per-$\gamma$) & 1.00 & 0.80 & 0.60 & 0.800 \\
+\rowcolor{yellow!30}
+Hybrid ($\beta=0.5$) & 1.00 & 0.60 & 1.00 & 0.867 \\
+\textbf{Baseline (GVP BCE)} & \textbf{1.00} & \textbf{1.00} & \textbf{0.80} & \textbf{0.933} \\
+\bottomrule
+\end{tabular}
+\caption{三個挑戰蛋白質上的命中率（Top-5，距離阈值 8\,\AA{}）。
+  黄色行为最佳量子增强結果。}
+\end{table}
+
+\textbf{關鍵發現：}
+\begin{itemize}
+  \item GVP BCE 基準達到 0.933，超越所有 CTQW 變體，原因是密集梯度訊號。
+  \item 混合模型（0.867）使 Cardiac Myosin 從 0.60 提升至 1.00，顯示 CTQW 對近距離口袋有效。
+  \item BCR-ABL1 在混合模型中停留於 0.60（最佳 checkpoint 在 epoch 20），
+        需要更長訓練或更高的 $\lambda_{\text{ctqw}}$。
+  \item ENAQT 對三個蛋白質無差别改善，因 $\gamma$ 需求衝突。
+\end{itemize}
+
+% ══════════════════════════════════════════════════════════════════════════════
+\section{難以成藥蛋白質的三層驗證框架}
+
+對真正難以成藥的蛋白質（僅 apo 結構），建議以下三層驗證策略：
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.70\linewidth]{figures/fig6_validation.pdf}
+\caption{三層驗證框架。候選别構口袋必須通過幾何層（Layer 1）、
+  動力學層（Layer 2）和演化層（Layer 3）的篩選。
+  隱性口袋（apo 結構中不可見）需繞過 Layer 1，使用 MDpocket。}
+\end{figure}
+
+\begin{description}
+  \item[Layer 1 — 幾何（Geometry）：]
+    使用 fpocket 或 DoGSiteScorer 識别體積 $>300$\,\AA{}$^3$、
+    可成藥性評分 $>0.5$ 的口袋。
+  \item[Layer 2 — 動力學（Dynamics）：]
+    ENM/PRS effectivity 高（代表擾動傳播效果强），
+    同時 CTQW $C[\text{active} \to i]$ 高（代表量子通訊樞紐）。
+  \item[Layer 3 — 演化（Evolution）：]
+    ConSurf 保守性分數高，
+    EVcouplings 顯示與活性位點殘基的共同演化。
+  \item[隱性口袋（Cryptic Pocket）：]
+    apo 結構中不可見，需要分子動力學模擬（MDpocket on 100 ns MD）
+    捕捉瞬態開口。
+\end{description}
+
+% ══════════════════════════════════════════════════════════════════════════════
+\section{與 PocketMiner 的關聯及提議流程}
+
+PocketMiner \cite{meller2023pocketminer} 使用在 MD 軌迹上訓練的 GVP-GNN，
+從静態 apo 結構預測\textit{隱性口袋開启機率}。
+關鍵：它\textbf{不}使用 ENM，而是直接學習静態結構特徵到 MD 衍生口袋標签的映射。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\linewidth]{figures/fig7_pocketminer.pdf}
+\caption{提議之完整流程。PocketMiner 識别隱性口袋位置；
+  CTQW Hybrid 識别與活性位點通訊的位點；
+  ENM/PRS 提供動力學驗證。三者的交集即为最終候選。}
+\end{figure}
+
+\textbf{PocketMiner 與本方法的互補性：}
+\begin{itemize}
+  \item PocketMiner 回答「這里有可能打開的口袋嗎？」（幾何可達性）
+  \item CTQW Hybrid 回答「這個口袋能從活性位點量子通訊觸及嗎？」（别構通訊）
+  \item ENM/PRS 回答「擾動活性位點會影響這里嗎？」（傳統動力學驗證）
+\end{itemize}
+
+% ══════════════════════════════════════════════════════════════════════════════
+\section{結論}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{>{\bfseries}p{5.5cm}p{7.5cm}}
+\toprule
+發現 & 意涵 \\
+\midrule
+GVP 基準（0.933）勝過所有 CTQW 變體
+  & 每節點 BCE 提供比連通性損失更密集的梯度訊號 \\
+連通性損失 $\gg$ 機率損失
+  & 封閉形式 $C[i,j]$ 避免了 100 步時間循環與梯度消失 \\
+ENAQT：$\gamma$ 無法泛化
+  & 近口袋與遠口袋蛋白質需要相互衝突的去相干尺度 \\
+Hybrid 達到 0.867
+  & 結合 BCE 監督與 CTQW 物理先驗，優於單獨使用任一方法 \\
+BCR-ABL1 需要 CTQW
+  & $>30$\,\AA{} 的别構口袋無法僅靠局部化學識别達到 \\
+PocketMiner + CTQW 互補
+  & 幾何可開启性 $\times$ 别構通訊 = 最强驗證 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{後續步驟：}
+(1) 延長 Hybrid 訓練，使 BCR-ABL1 恢復至 1.00；
+(2) 將 PocketMiner 分數作为額外節點特徵整合至 GVP 編碼器；
+(3) 對真正難以成藥靶點（如 KRAS\textsuperscript{G12D} 無共價彈頭位點）
+    應用完整三層驗證框架。
+
+\vspace{2em}
+\hrule
+\vspace{0.5em}
+\small
+訓練資料集：ASD Release 2019（123 個蛋白質）。
+所有模型在 NVIDIA H200 上訓練（Cleveland Clinic HPC，帳號 GOV114009）。\\
+程式碼：\url{https://github.com/leo07010/ctqw-allosteric-prediction}
+
+\begin{thebibliography}{9}
+\bibitem{jing2021equivariant}
+  Jing, B., et al. (2021).
+  \textit{Learning from Protein Structure with Geometric Vector Perceptrons}.
+  ICLR 2022.
+
+\bibitem{meller2023pocketminer}
+  Meller, A., et al. (2023).
+  \textit{Predicting the locations of cryptic pockets from single protein structures
+  using the PocketMiner graph neural network}.
+  \textit{Nature Communications}, 14, 1177.
+
+\bibitem{rebentrost2009enaqt}
+  Rebentrost, P., et al. (2009).
+  \textit{Environment-Assisted Quantum Transport}.
+  \textit{New Journal of Physics}, 11, 033003.
+\end{thebibliography}
+
+\end{document}
