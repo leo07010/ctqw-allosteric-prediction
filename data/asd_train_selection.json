@@ -1,0 +1,558 @@
+{
+  "3ZLK": {
+    "modname": "Y46",
+    "chain": "A"
+  },
+  "1YXD": {
+    "modname": "LYS",
+    "chain": "B"
+  },
+  "4CFH": {
+    "modname": "AMP",
+    "chain": "E"
+  },
+  "3KFS": {
+    "modname": "2FX",
+    "chain": "B"
+  },
+  "4CHN": {
+    "modname": "ONZ",
+    "chain": "A"
+  },
+  "4AAQ": {
+    "modname": "ATP",
+    "chain": "A"
+  },
+  "2IEG": {
+    "modname": "FRY",
+    "chain": "A"
+  },
+  "3KC0": {
+    "modname": "2T5",
+    "chain": "A"
+  },
+  "2YKN": {
+    "modname": "YKN",
+    "chain": "A"
+  },
+  "2XJD": {
+    "modname": "ATP",
+    "chain": "A"
+  },
+  "3ESO": {
+    "modname": "DZ2",
+    "chain": "A"
+  },
+  "3KFN": {
+    "modname": "4DX",
+    "chain": "A"
+  },
+  "3VQE": {
+    "modname": "FMQ",
+    "chain": "A"
+  },
+  "3JVS": {
+    "modname": "AGY",
+    "chain": "A"
+  },
+  "2ORR": {
+    "modname": "333",
+    "chain": "A"
+  },
+  "3D83": {
+    "modname": "GK6",
+    "chain": "A"
+  },
+  "4KGX": {
+    "modname": "CTP",
+    "chain": "B"
+  },
+  "3KH5": {
+    "modname": "AMP",
+    "chain": "A"
+  },
+  "3F3T": {
+    "modname": "1AU",
+    "chain": "A"
+  },
+  "1WUY": {
+    "modname": "BN3",
+    "chain": "A"
+  },
+  "3BDA": {
+    "modname": "C4B",
+    "chain": "A"
+  },
+  "2BTY": {
+    "modname": "ARG",
+    "chain": "A"
+  },
+  "1NH8": {
+    "modname": "HIS",
+    "chain": "A"
+  },
+  "4EAK": {
+    "modname": "ATP",
+    "chain": "C"
+  },
+  "4LV6": {
+    "modname": "20H",
+    "chain": "A"
+  },
+  "1UXP": {
+    "modname": "AMP",
+    "chain": "A"
+  },
+  "2CEV": {
+    "modname": "GAI",
+    "chain": "A"
+  },
+  "4HO6": {
+    "modname": "UTP",
+    "chain": "A"
+  },
+  "4I87": {
+    "modname": "H50",
+    "chain": "A"
+  },
+  "1WBS": {
+    "modname": "LI2",
+    "chain": "A"
+  },
+  "1Z62": {
+    "modname": "IAA",
+    "chain": "A"
+  },
+  "2PUB": {
+    "modname": "ADE",
+    "chain": "A"
+  },
+  "2ORO": {
+    "modname": "228",
+    "chain": "A"
+  },
+  "4CIE": {
+    "modname": "Y7N",
+    "chain": "A"
+  },
+  "4AW1": {
+    "modname": "21O",
+    "chain": "A"
+  },
+  "4CLW": {
+    "modname": "SO3",
+    "chain": "A"
+  },
+  "3FR0": {
+    "modname": "AJB",
+    "chain": "A"
+  },
+  "4FI8": {
+    "modname": "0UC",
+    "chain": "A"
+  },
+  "3E93": {
+    "modname": "19B",
+    "chain": "A"
+  },
+  "2VGB": {
+    "modname": "FBP",
+    "chain": "A"
+  },
+  "4H46": {
+    "modname": "AMP",
+    "chain": "A"
+  },
+  "1H5U": {
+    "modname": "CHI",
+    "chain": "A"
+  },
+  "4OYP": {
+    "modname": "BZ2",
+    "chain": "A"
+  },
+  "3BJF": {
+    "modname": "FBP",
+    "chain": "A"
+  },
+  "2OIQ": {
+    "modname": "STI",
+    "chain": "A"
+  },
+  "2CLH": {
+    "modname": "F19",
+    "chain": "A"
+  },
+  "3TZ9": {
+    "modname": "AQU",
+    "chain": "A"
+  },
+  "2WGH": {
+    "modname": "DTP",
+    "chain": "A"
+  },
+  "3HQQ": {
+    "modname": "FDP",
+    "chain": "A"
+  },
+  "3RIA": {
+    "modname": "IVM",
+    "chain": "A"
+  },
+  "4CEE": {
+    "modname": "B0T",
+    "chain": "A"
+  },
+  "5AT1": {
+    "modname": "CTP",
+    "chain": "B"
+  },
+  "1SUQ": {
+    "modname": "185",
+    "chain": "A"
+  },
+  "2D3U": {
+    "modname": "CCT",
+    "chain": "A"
+  },
+  "4DLZ": {
+    "modname": "DTU",
+    "chain": "A"
+  },
+  "2X7D": {
+    "modname": "EGB",
+    "chain": "A"
+  },
+  "1TJP": {
+    "modname": "HPF",
+    "chain": "A"
+  },
+  "1C30": {
+    "modname": "ORN",
+    "chain": "A"
+  },
+  "3BZ9": {
+    "modname": "BL7",
+    "chain": "A"
+  },
+  "3BQN": {
+    "modname": "BQN",
+    "chain": "B"
+  },
+  "3SMQ": {
+    "modname": "TDU",
+    "chain": "A"
+  },
+  "4GQQ": {
+    "modname": "0XR",
+    "chain": "A"
+  },
+  "1H78": {
+    "modname": "DCP",
+    "chain": "A"
+  },
+  "2YLQ": {
+    "modname": "YLQ",
+    "chain": "A"
+  },
+  "4U5C": {
+    "modname": "FWF",
+    "chain": "D"
+  },
+  "4IKJ": {
+    "modname": "SUZ",
+    "chain": "A"
+  },
+  "3RDI": {
+    "modname": "CMP",
+    "chain": "A"
+  },
+  "2CDQ": {
+    "modname": "SAM",
+    "chain": "A"
+  },
+  "1U21": {
+    "modname": "P2C",
+    "chain": "A"
+  },
+  "2QN9": {
+    "modname": "IMP",
+    "chain": "A"
+  },
+  "2O8D": {
+    "modname": "ADP",
+    "chain": "A"
+  },
+  "1CQP": {
+    "modname": "803",
+    "chain": "A"
+  },
+  "1CE8": {
+    "modname": "ORN",
+    "chain": "A"
+  },
+  "2XCV": {
+    "modname": "DG2",
+    "chain": "A"
+  },
+  "3EEB": {
+    "modname": "IHP",
+    "chain": "A"
+  },
+  "3NUD": {
+    "modname": "PHE",
+    "chain": "B"
+  },
+  "3S8B": {
+    "modname": "ANP",
+    "chain": "A"
+  },
+  "3VEY": {
+    "modname": "0H5",
+    "chain": "A"
+  },
+  "2BXE": {
+    "modname": "1FL",
+    "chain": "A"
+  },
+  "1XJN": {
+    "modname": "DTP",
+    "chain": "A"
+  },
+  "3DDW": {
+    "modname": "055",
+    "chain": "A"
+  },
+  "2ROX": {
+    "modname": "T44",
+    "chain": "A"
+  },
+  "4CES": {
+    "modname": "NFW",
+    "chain": "A"
+  },
+  "4I89": {
+    "modname": "1FL",
+    "chain": "A"
+  },
+  "3IMW": {
+    "modname": "IW6",
+    "chain": "A"
+  },
+  "4HO3": {
+    "modname": "TTP",
+    "chain": "A"
+  },
+  "3RYR": {
+    "modname": "CMP",
+    "chain": "A"
+  },
+  "3LC6": {
+    "modname": "AMP",
+    "chain": "B"
+  },
+  "3KGF": {
+    "modname": "TRP",
+    "chain": "B"
+  },
+  "1NE7": {
+    "modname": "16G",
+    "chain": "B"
+  },
+  "3OIV": {
+    "modname": "DTT",
+    "chain": "A"
+  },
+  "1S9G": {
+    "modname": "ABZ",
+    "chain": "A"
+  },
+  "3VF6": {
+    "modname": "0H6",
+    "chain": "A"
+  },
+  "2GIR": {
+    "modname": "NN3",
+    "chain": "A"
+  },
+  "2CLF": {
+    "modname": "F6F",
+    "chain": "A"
+  },
+  "4CF9": {
+    "modname": "5EY",
+    "chain": "A"
+  },
+  "3ZLL": {
+    "modname": "4WF",
+    "chain": "A"
+  },
+  "3OZL": {
+    "modname": "FLF",
+    "chain": "A"
+  },
+  "2VPR": {
+    "modname": "TDC",
+    "chain": "A"
+  },
+  "1WV1": {
+    "modname": "BN5",
+    "chain": "A"
+  },
+  "3KGU": {
+    "modname": "GEN",
+    "chain": "A"
+  },
+  "3UMO": {
+    "modname": "ATP",
+    "chain": "B"
+  },
+  "4OO9": {
+    "modname": "2U8",
+    "chain": "A"
+  },
+  "4GRS": {
+    "modname": "TYR",
+    "chain": "A"
+  },
+  "4FC0": {
+    "modname": "0T2",
+    "chain": "A"
+  },
+  "2SKD": {
+    "modname": "IMP",
+    "chain": "A"
+  },
+  "4ANB": {
+    "modname": "YQY",
+    "chain": "A"
+  },
+  "1Q5O": {
+    "modname": "CMP",
+    "chain": "A"
+  },
+  "4CF0": {
+    "modname": "O5U",
+    "chain": "A"
+  },
+  "1ZRF": {
+    "modname": "CMP",
+    "chain": "A"
+  },
+  "1C50": {
+    "modname": "CHI",
+    "chain": "A"
+  },
+  "3MK6": {
+    "modname": "ACO",
+    "chain": "A"
+  },
+  "3LA2": {
+    "modname": "AKG",
+    "chain": "A"
+  },
+  "4AN3": {
+    "modname": "5Y0",
+    "chain": "A"
+  },
+  "1E1Y": {
+    "modname": "CPB",
+    "chain": "A"
+  },
+  "1DVX": {
+    "modname": "DIF",
+    "chain": "B"
+  },
+  "1UM8": {
+    "modname": "ADP",
+    "chain": "A"
+  },
+  "1JLR": {
+    "modname": "GTP",
+    "chain": "A"
+  },
+  "4B3U": {
+    "modname": "NWL",
+    "chain": "A"
+  },
+  "2BRL": {
+    "modname": "POO",
+    "chain": "A"
+  },
+  "3EL8": {
+    "modname": "PD5",
+    "chain": "A"
+  },
+  "3F3U": {
+    "modname": "1AW",
+    "chain": "A"
+  },
+  "3F3V": {
+    "modname": "1BU",
+    "chain": "A"
+  },
+  "3F3W": {
+    "modname": "1BU",
+    "chain": "A"
+  },
+  "3G6G": {
+    "modname": "G6G",
+    "chain": "A"
+  },
+  "3TZ7": {
+    "modname": "AQB",
+    "chain": "A"
+  },
+  "3TZ8": {
+    "modname": "AQM",
+    "chain": "A"
+  },
+  "4AGW": {
+    "modname": "NG7",
+    "chain": "A"
+  },
+  "3PYY": {
+    "modname": "3YY",
+    "chain": "A"
+  },
+  "3K5V": {
+    "modname": "STJ",
+    "chain": "A"
+  },
+  "3GVU": {
+    "modname": "STI",
+    "chain": "A"
+  },
+  "4DLR": {
+    "modname": "DTU",
+    "chain": "A"
+  },
+  "4DLV": {
+    "modname": "DTT",
+    "chain": "A"
+  },
+  "4DLX": {
+    "modname": "DTU",
+    "chain": "A"
+  },
+  "4DLY": {
+    "modname": "DTT",
+    "chain": "A"
+  },
+  "4G0N": {
+    "modname": "DTT",
+    "chain": "A"
+  },
+  "3V4F": {
+    "modname": "DTT",
+    "chain": "A"
+  },
+  "1YV3": {
+    "modname": "BIT",
+    "chain": "A"
+  },
+  "3BZ7": {
+    "modname": "BL4",
+    "chain": "A"
+  }
+}

@@ -1,0 +1,30 @@
+# Large data files (download separately)
+data/asd_pdbs/
+data/asd_processed/
+data/deepallo_*.pkl
+deepallo_*.pkl
+
+# Model checkpoints and outputs
+outputs/
+*.pt
+*.npy
+
+# Logs
+logs/
+*.out
+*.err
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.eggs/
+*.egg-info/
+dist/
+build/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
