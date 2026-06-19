@@ -2,7 +2,7 @@
 %% 使用 xelatex 編譯，字型：Fandol
 \documentclass[11pt, a4paper]{article}
 
-% ── 中文支援（Fandol 字型，繁體標籤）─────────────────────────────────────────
+% ── 中文支援（Fandol 字型，繁體標签）─────────────────────────────────────────
 \usepackage[UTF8, fontset=fandol]{ctex}
 % Override ctex Simplified-default captions to Traditional Chinese
 \AtBeginDocument{
@@ -276,6 +276,96 @@ PocketMiner \cite{meller2023pocketminer} 使用在 MD 軌迹上訓練的 GVP-GNN
   \item CTQW Hybrid 回答「這個口袋能從活性位點量子通訊觸及嗎？」（别構通訊）
   \item ENM/PRS 回答「擾動活性位點會影響這里嗎？」（傳統動力學驗證）
 \end{itemize}
+
+% ══════════════════════════════════════════════════════════════════════════════
+\section{为什么 T→$\infty$ 連通性損失失效——量子行走根本原因分析}
+
+\textbf{核心推導：}$C[i,j] = \sum_k |V_{ik}|^2 |V_{jk}|^2$ 是 CTQW 的 $T \to \infty$ 時間平均。
+由於 $\sum_j C[i,j] = 1$（列和为 1）且蛋白質圖特徵向量是非局域化的：
+
+\[
+  C[i,j] \;\approx\; \frac{1}{N} \quad \text{for all } j \qquad (N \sim 300\text{--}500)
+\]
+
+對 BCR-ABL1（$N \approx 470$），實測：$C[\text{act, allo}] = 0.00182$，$C[\text{act, bg}] = 0.00199$，
+訊號比 = \textbf{0.91×（訊號倒置！）}。
+
+\textbf{修正方案——最優時間量子概率 $P(j, t^*)$：}
+
+\[
+  P(j, t^*) = \left|\langle j \,|\, e^{-iHt^*} \,|\, \text{active}\rangle\right|^2
+\]
+
+$t^*$ 是可學習參數（$t^* = e^{\log t^*}$），梯度路徑为
+$\mathcal{L} \to P(j,t^*) \to t^* \to \frac{\partial}{\partial t^*} e^{-iHt^*}$。
+
+在玩具路徑圖（$N=30$）上的比較：
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lrr}
+\toprule
+方法 & 識别比（allo/bg） & 说明 \\
+\midrule
+T→∞ 連通性 $C[i,j]$ & $1.5\times$ & 接近 1，無法識别 \\
+\rowcolor{yellow!30}
+$P(j, t^*)$（本方法） & $\mathbf{32\times}$ & 11倍峰值信號放大 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ══════════════════════════════════════════════════════════════════════════════
+\section{新架構提案：LLM + PDB + GVP-GNN + CTQW}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{figures/fig8_pipeline_complete.pdf}
+\caption{提案之完整流程。ESM-2 提供每殘基 480 維語言模型嵌入（免費本地推理）；
+  GVP-GNN 輸出哈密頓量 $H$；CTQW 以最優時間概率 $P(j,t^*)$ 做推論。
+  分數 $= \alpha \cdot \sigma(\text{logits}) + \beta \cdot P(j, t^*)$。}
+\end{figure}
+
+\textbf{为何引入 ESM-2（LLM）？}
+\begin{itemize}
+  \item \textbf{跨蛋白泛化}：ESM-2 的進化背景讓模型能推論訓練集之外的蛋白質
+  \item \textbf{不可成藥偵測}：内源無序蛋白在 ESM-2 空間有特殊模式，可讓模型降低其權重
+  \item \textbf{無需 API 費用}：ESM-2 可本地運行（fair-esm 或 HuggingFace），不需商業 API
+\end{itemize}
+
+\textbf{PDB 中可直接取得的標注特徵（免費）：}
+B-factor（熱運動），DSSP 二級結構，已知活性位點（UniProt 注释），序列保守性。
+
+% ══════════════════════════════════════════════════════════════════════════════
+\section{評估框架：AUPRC 與多指標分析}
+
+\textbf{为何用 AUPRC 而非 AUROC？}
+别構殘基占全蛋白比例僅 $\sim3$--$5\%$（稀有正例），AUROC 對稀有類别不敏感（
+隨機模型 AUROC $\approx 0.5$，差模型仍可達 $0.85$）。AUPRC 的隨機基线 $=$ 患病率 $\approx 0.04$。
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lrrrrrr}
+\toprule
+\textbf{模型} & \textbf{KRAS AUPRC} & \textbf{BCR-ABL1 AUPRC} & \textbf{Cardiac AUPRC} & \textbf{平均} & \textbf{Hit@5} \\
+\midrule
+T→∞ 連通性 & 0.611 & 0.051 & 0.358 & 0.340 & 0.533 \\
+\rowcolor{yellow!30}
+$P(j, t^*)$ 最優時間 & 0.914 & \textbf{0.764} & 0.917 & \textbf{0.865} & \textbf{1.000} \\
+隨機基线 & 0.050 & 0.038 & 0.029 & 0.039 & 0.039 \\
+\bottomrule
+\end{tabular}
+\caption{BCR-ABL1 是最困難的情况：T→∞ 連通性 AUPRC 僅 0.051（接近隨機），
+  $P(j,t^*)$ 方法将其提升至 0.764。AUPRC 放大倍數：$0.340 \to 0.865$。}
+\end{table}
+
+評估指標完整定義：
+\begin{description}
+  \item[AUPRC] 精確率–召回率曲线下面積，對稀有正例最敏感（主要指標）
+  \item[AUROC] ROC 曲线下面積，表示隨機對中的排序能力
+  \item[Hit@K] Top-$K$ 預測殘基中命中真實别構位點的比率（8\,\AA{} 半徑）
+  \item[EF10\%] 富集因子：Top-10\% 命中數 / 隨機期望命中數
+  \item[MCC] Matthews 相關系數：平衡精確率與召回率的单一指標
+\end{description}
 
 % ══════════════════════════════════════════════════════════════════════════════
 \section{結論}
